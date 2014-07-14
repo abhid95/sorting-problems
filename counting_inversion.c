@@ -1,58 +1,56 @@
+#include<stdio.h>
+#include<string.h>
 #include<iostream>
+#include<algorithm>
 using namespace std;
-int n;
-int divide(int a[],int p,int r);
-int fix(int a[],int p,int q,int r);
+#define MAX 200006
+int arr[MAX];
+int temp[MAX];
+unsigned long long merge(int arr[],int temp[],int left,int mid,int right)
+{
+    int i=left;
+    int j=mid;
+    int k=left;
+    unsigned long long int invcount=0;
+    while((i<=mid-1) && (j<=right))
+    {
+        if(arr[i]<=arr[j])
+        temp[k++]=arr[i++];
+        else
+        {
+            temp[k++]=arr[j++];
+            invcount+=(mid-i);
+        }
+    }
+    while(i<=mid-1)
+    temp[k++]=arr[i++];
+    while(j<=right)
+    temp[k++]=arr[j++];
+    for(int i=left;i<=right;i++)
+    arr[i]=temp[i];
+    return invcount;
+}
+unsigned long long int mergesort(int arr[],int temp[],int left,int right)
+{
+    unsigned long long int invcount=0;
+    if(right>left){
+        int mid=(left+right)/2;
+        invcount=mergesort(arr,temp,left,mid);
+        invcount+=mergesort(arr,temp,mid+1,right);
+        invcount+=merge(arr,temp,left,mid+1,right);
+    }
+    return invcount;
+}
 int main()
 {
-int i,a[250],count;
-cin>>n;
-for(i=0;i<n;i++)
-{
-	cin>>a[i];
-}
-count=divide(a,0,n-1);
-for(i=0;i<n;i++)
-cout<<a[i]<<endl;
-cout<<" number of inversions"<<count<<endl;
-return 0;
-}
-int divide(int a[],int p,int r)
-{
-int m,count=0;
-if(p<r)
-{
-	m=(p+r)/2;	
-    count=divide(a,p,m);
-	count=count+divide(a,m+1,r);
-	count=count+fix(a,p,m,r);
-}
-return count;
-}
-int fix(int a[],int p,int q,int r)
-{
-int i,j,m,b[250],o,count=0;
-for(i=p,m=q+1,o=p;i<=q&&m<=r;)
-{
-	if(a[i]<=a[m])
-	{
-		b[o++]=a[i++];
-
-	}
-	else
-	{
-		b[o++]=a[m++];
-		count+=1+q-i;
-		
-	}
-	
-}
-for(;i<=q;i++)
-b[o++]=a[i];
-for(;m<=r;m++)
-b[o++]=a[m];
-label:
-for(i=p;i<=r;i++)
-a[i]=b[i];
-return count;
+    int t,n;
+    scanf("%d",&t);
+    while(t--){
+        scanf("%d",&n);
+        for(int i=0;i<n;i++){
+            scanf("%d",&arr[i]);
+        }
+        printf("%llu\n",mergesort(arr,temp,0,n-1));
+    }
+    return 0;
 }

@@ -33,7 +33,6 @@ int lcs(string a,string b)
 				}
 			}
 		}
-
 	}
 	return seqsum[m];
 }

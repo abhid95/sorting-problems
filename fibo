@@ -38,8 +38,6 @@ void fibgen()
 		}
 		fib.push_back(a);
 	}
-
-
 }
 int main()
 {
